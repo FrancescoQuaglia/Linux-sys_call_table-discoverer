@@ -103,7 +103,7 @@ int validate_page(unsigned long *addr){
 	int i = 0;
 	unsigned long page 	= (unsigned long) addr;
 	unsigned long new_page 	= (unsigned long) addr;
-	for(; i < PAGE_SIZE; i+=sizeof(void*)){		// uses assumption 6)
+	for(; i < PAGE_SIZE; i+=sizeof(void*)){		
 		new_page = page+i+SECOND_NI_SYSCALL*sizeof(void*);
 			
 		// If the table occupies 2 pages check if the second one is materialized in a frame
@@ -115,16 +115,16 @@ int validate_page(unsigned long *addr){
 		// go for patter matching
 		addr = (unsigned long*) (page+i);
 		if(
-			   ( (addr[FIRST_NI_SYSCALL] & 0x3  ) == 0 )			// uses assumption 8)	
+			   ( (addr[FIRST_NI_SYSCALL] & 0x3  ) == 0 )		
 			   && (addr[FIRST_NI_SYSCALL] != 0x0 )			// not points to 0x0	
-			   && (addr[FIRST_NI_SYSCALL] > 0xffffffff00000000 )			// not points to a locatio lower than 0xffffffff00000000	
-	//&& ( (addr[FIRST_NI_SYSCALL] & START) == START ) 		// uses assumption 4)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[SECOND_NI_SYSCALL] )		// uses assumption 7)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[THIRD_NI_SYSCALL]	 )	        // uses assumption 7)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[FOURTH_NI_SYSCALL] )		// uses assumption 7)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[FIFTH_NI_SYSCALL] )		// uses assumption 7)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[SIXTH_NI_SYSCALL] )		// uses assumption 7)
-			&&   ( addr[FIRST_NI_SYSCALL] == addr[SEVENTH_NI_SYSCALL] )		// uses assumption 7)
+			   && (addr[FIRST_NI_SYSCALL] > 0xffffffff00000000 )	// not points to a locatio lower than 0xffffffff00000000	
+	//&& ( (addr[FIRST_NI_SYSCALL] & START) == START ) 	
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[SECOND_NI_SYSCALL] )
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[THIRD_NI_SYSCALL]	 )	
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[FOURTH_NI_SYSCALL] )
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[FIFTH_NI_SYSCALL] )	
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[SIXTH_NI_SYSCALL] )
+			&&   ( addr[FIRST_NI_SYSCALL] == addr[SEVENTH_NI_SYSCALL] )	
 			&&   (good_area(addr))
 		){
 			hacked_ni_syscall = (void*)(addr[FIRST_NI_SYSCALL]);				// save ni_syscall
@@ -142,7 +142,7 @@ void syscall_table_finder(void){
 	unsigned long k; // current page
 	unsigned long candidate; // current page
 
-	for(k=START; k < MAX_ADDR; k+=4096){	// use assumption 1) & 4)
+	for(k=START; k < MAX_ADDR; k+=4096){	
 		candidate = k;
 		if(
 			(sys_vtpmo(candidate) != NO_MAP) 	
@@ -162,7 +162,6 @@ void syscall_table_finder(void){
 #define MAX_FREE 15
 int free_entries[MAX_FREE];
 module_param_array(free_entries,int,NULL,0660);//default array size already known - here we expose what entries are free
-
 
 
 #define SYS_CALL_INSTALL
