@@ -84,8 +84,8 @@ int good_area(unsigned long * addr){
 
 	int i;
 	
-	for(i=1;i<134;i++){
-		if(addr[i] == addr[134]) goto bad_area;
+	for(i=1;i<FIRST_NI_SYSCALL;i++){
+		if(addr[i] == addr[FIRST_NI_SYSCALL]) goto bad_area;
 	}	
 
 	return 1;
@@ -238,9 +238,9 @@ int init_module(void) {
 #ifdef SYS_CALL_INSTALL
 	cr0 = read_cr0();
         unprotect_memory();
-        hacked_syscall_tbl[134] = (unsigned long*)sys_trial;
+        hacked_syscall_tbl[FIRST_NI_SYSCALL] = (unsigned long*)sys_trial;
         protect_memory();
-	printk("%s: a sys_call with 2 parameters has been installed as a trial on the sys_call_table at displacement 134 \n",MODNAME);	
+	printk("%s: a sys_call with 2 parameters has been installed as a trial on the sys_call_table at displacement %d\n",MODNAME,FIRST_NI_SYSCALL);	
 #else
 #endif
 
@@ -255,7 +255,7 @@ void cleanup_module(void) {
 #ifdef SYS_CALL_INSTALL
 	cr0 = read_cr0();
         unprotect_memory();
-        hacked_syscall_tbl[134] = (unsigned long*)hacked_ni_syscall;
+        hacked_syscall_tbl[FIRST_NI_SYSCALL] = (unsigned long*)hacked_ni_syscall;
         protect_memory();
 #else
 #endif
