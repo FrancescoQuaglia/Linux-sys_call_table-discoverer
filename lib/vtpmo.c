@@ -34,6 +34,9 @@
 #include <asm/cacheflush.h>
 #include <asm/apic.h>
 #include <linux/syscalls.h>
+#include <asm/page.h>
+#include <asm/io.h>
+
 
 
 MODULE_LICENSE("GPL");
